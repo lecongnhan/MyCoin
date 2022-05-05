@@ -41,3 +41,19 @@ def getTransactionById(transactionId):
         mimetype='application/json'
     )
     return response
+
+@app.route("/api/address/<address>", methods=['GET'])
+def getUnspentTxOutsByAddress(address):
+    global _chain
+
+    unspentTxOuts = _chain.getUnspentTxOutsByAddress(address)
+
+    res = []
+    for unspentTxOut in unspentTxOuts:
+        res.append(unspentTxOut.toJson())
+
+    response = app.response_class(
+        response=res,
+        mimetype='application/json'
+    )
+    return response

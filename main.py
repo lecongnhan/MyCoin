@@ -8,7 +8,7 @@ import datetime
 def main():
     chain = MyChain()
     
-    for i in range(0, 10):
+    for i in range(0, 2):
         chain.addNewBlock("Block #" + str(i), [
             Transaction()
         ])

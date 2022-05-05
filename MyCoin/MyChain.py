@@ -2,6 +2,7 @@ from .MyBlock import MyBlock
 from .Transaction import Transaction
 from .TxIn import TxIn
 from .TxOut import TxOut
+from .MyWallet import MyWallet
 
 import datetime
 import json
@@ -12,8 +13,9 @@ COINBASE_AMOUNT = 50
 class MyChain:
     def __init__(self):
         self._difficulty = 2
-        self._chain = [self._createGenesisBlock()]
         self._unspentTxOuts = []
+
+        self._chain = [self._createGenesisBlock()]
 
     def _createGenesisBlock(self):
         """
@@ -24,7 +26,19 @@ class MyChain:
         """
         # get current timestamp using datetime
         timestamp = datetime.datetime.now()
-        return MyBlock(0, timestamp, "Genesis Block", [], "")
+
+        # generates a new wallet
+        wallet = MyWallet.createNewWallet()
+
+        # create coinbase transaction
+        txIn = TxIn("", "", 0)
+        txOut = TxOut("0", 0, wallet.getPublicKey(), COINBASE_AMOUNT)
+        coinbaseTransaction = Transaction([txIn], [txOut])
+
+        # update the unspent transaction outputs
+        self._unspentTxOuts.append(txOut)
+
+        return MyBlock(0, timestamp, "Genesis Block", [coinbaseTransaction], "")
 
     def getLastestBlock(self):
         """
@@ -95,6 +109,22 @@ class MyChain:
                 if transaction.getId() == transactionId:
                     return transaction
         return None
+
+    def getUnspentTxOutsByAddress(self, address):
+        """
+        get the unspent TxOuts of the address
+
+        Args:
+            address (string): address of the wallet
+
+        Returns:
+            list(TxOut): list of unspent TxOuts
+        """
+        txOuts = []
+        for txOut in self._unspentTxOuts:
+            if txOut.getAddress() == address:
+                txOuts.append(txOut)
+        return txOuts
 
     def checkChainValidity(self):
         """
