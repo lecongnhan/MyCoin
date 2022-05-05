@@ -4,11 +4,14 @@ class MyBlock:
     """A block in the blockchain
     """    
     def __init__(self, index, timestamp, data, previous_hash=""):
-        print("Creating a block with index:", index, \
-            "timestamp:", timestamp, \
-            "data:", data, \
-            "previous_hash:", previous_hash)
-        
+        """create a new block
+
+        Args:
+            index (int): index of the block
+            timestamp (datetime.time): the timestamp when the block is created
+            data (string): data of the block
+            previous_hash (str, optional): The hash of the previous block in the chain. Defaults to "".
+        """
         # a unique number that tracks the position of every block in the entire blockchain.
         self._index = index
 
@@ -58,6 +61,15 @@ class MyBlock:
         """        
         return self._hash
 
+    def getIndex(self):
+        """
+        get the index of the block
+
+        Returns:
+            int: index of the block
+        """        
+        return self._index
+
     ############# PROCESSING FUNCTIONS #############
         
     def calHash(self):
@@ -73,6 +85,11 @@ class MyBlock:
         return sha.hexdigest()
 
     def proofOfWork(self, difficulty):
+        """increase the difficulty entailed in mining or adding new blocks to the blockchain.
+
+        Args:
+            difficulty (int): the difficulty of the chain
+        """
         while (self._hash[0: difficulty] != "".join(["0"] * difficulty)):
             self._nonce += 1
             self.setHash(self.calHash())

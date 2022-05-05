@@ -9,19 +9,46 @@ class MyChain:
         self._chain = [self._createGenesisBlock()]
 
     def _createGenesisBlock(self):
+        """
+        create the first block of the chain
+
+        Returns:
+            MyBlock: the first block of the chain
+        """
         # get current timestamp using datetime
         timestamp = datetime.datetime.now()
         return MyBlock(0, timestamp, "Genesis Block", "")
 
     def getLastestBlock(self):
+        """
+        get the last block of the chain
+
+        Returns:
+            MyBlock: the last block of the chain
+        """
         return self._chain[-1]
 
-    def addNewBlock(self, newBlock):
+    def addNewBlock(self, data):
+        """
+        generate a new block and add it to the chain
+
+        Args:
+            data (string): data of the new block
+
+        Returns:
+            MyBlock: the new block
+        """
+        
         lastBlock = self.getLastestBlock()
+        timestamp = datetime.datetime.now()
+
+        newBlock = MyBlock(lastBlock.getIndex() + 1, timestamp, data, lastBlock.getHash())
         newBlock.setPrevHash(lastBlock.getHash())
-        # newBlock.setHash(newBlock.calHash())
+        newBlock.setHash(newBlock.calHash())
+
         newBlock.proofOfWork(self._difficulty)
         self._chain.append(newBlock)
+        return newBlock
 
     def checkChainValidity(self):
         """
@@ -43,4 +70,10 @@ class MyChain:
         return True
 
     def toJson(self):
+        """
+        convert the chain to a json string
+
+        Returns:
+            string: json string of the chain
+        """
         return json.dumps(self._chain, default=lambda o: o.__dict__ if hasattr(o, "__dict__") else str(o), sort_keys=True, indent=4)

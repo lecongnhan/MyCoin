@@ -5,9 +5,10 @@ import datetime
 
 def main():
     chain = MyChain()
-    timestamp = datetime.datetime.now()
-    block = MyBlock(1, timestamp, "Block 1")
-    chain.addNewBlock(block)
+    
+    for i in range(0, 10):
+        chain.addNewBlock("Block #" + str(i))
+
     print(chain.toJson())
 
 
