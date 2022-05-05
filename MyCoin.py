@@ -1,0 +1,2 @@
+class MyCoin:
+    pass
