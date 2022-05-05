@@ -1,4 +1,5 @@
 import hashlib
+import json
 
 class Transaction:
     def __init__(self, txIns=[], txOuts=[]):
@@ -56,3 +57,12 @@ class Transaction:
             list(TxOut): list of transaction outputs
         """
         return self._txOuts
+
+    def toJson(self):
+        """
+        convert the transaction to a json object
+
+        Returns:
+            dict: json object of the block
+        """
+        return json.dumps(self, default=lambda o: o.__dict__ if hasattr(o, "__dict__") else str(o), sort_keys=True, indent=4)

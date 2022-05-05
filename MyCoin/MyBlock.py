@@ -75,6 +75,15 @@ class MyBlock:
         """        
         return self._index
 
+    def getTransactions(self):
+        """
+        get the transactions of the block
+
+        Returns:
+            list: transactions of the block
+        """
+        return self._transactions
+
     ############# PROCESSING FUNCTIONS #############
         
     def calHash(self):

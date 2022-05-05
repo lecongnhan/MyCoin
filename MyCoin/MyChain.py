@@ -60,7 +60,7 @@ class MyChain:
         for tx in transactions:
             for txIn in tx.getTxIns():
                 self._unspentTxOuts.remove(txIn)
-            for txOut in newBlock.getTxOuts():
+            for txOut in tx.getTxOuts():
                 self._unspentTxOuts.append(txOut)
 
         return newBlock
@@ -78,6 +78,22 @@ class MyChain:
         for block in self._chain:
             if block.getHash() == hash:
                 return block
+        return None
+
+    def getTransaction(self, transactionId):
+        """
+        get the transaction with the id
+
+        Args:
+            transactionId (string): id of the transaction
+
+        Returns:
+            MyTransaction: the transaction with the id
+        """
+        for block in self._chain:
+            for transaction in block.getTransactions():
+                if transaction.getId() == transactionId:
+                    return transaction
         return None
 
     def checkChainValidity(self):
