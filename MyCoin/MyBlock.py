@@ -1,4 +1,5 @@
 import hashlib
+import json
 
 class MyBlock:
     """A block in the blockchain
@@ -98,3 +99,12 @@ class MyBlock:
         while (self._hash[0: difficulty] != "".join(["0"] * difficulty)):
             self._nonce += 1
             self.setHash(self.calHash())
+
+    def toJson(self):
+        """
+        convert the block to a json object
+
+        Returns:
+            dict: json object of the block
+        """
+        return json.dumps(self, default=lambda o: o.__dict__ if hasattr(o, "__dict__") else str(o), sort_keys=True, indent=4)

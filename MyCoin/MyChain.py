@@ -1,12 +1,12 @@
 from .MyBlock import MyBlock
-from .MyTransaction import MyTransaction
+from .Transaction import Transaction
 from .TxIn import TxIn
 from .TxOut import TxOut
 
 import datetime
 import json
 
-const COINBASE_AMOUNT = 50
+COINBASE_AMOUNT = 50
 
 
 class MyChain:
@@ -60,11 +60,25 @@ class MyChain:
         for tx in transactions:
             for txIn in tx.getTxIns():
                 self._unspentTxOuts.remove(txIn)
-
-        for txOut in newBlock.getTxOuts():
-            self._unspentTxOuts.append(txOut)
+            for txOut in newBlock.getTxOuts():
+                self._unspentTxOuts.append(txOut)
 
         return newBlock
+
+    def getBlock(self, hash):
+        """
+        get the block with the hash
+
+        Args:
+            hash (string): hash of the block
+
+        Returns:
+            MyBlock: the block with the hash
+        """
+        for block in self._chain:
+            if block.getHash() == hash:
+                return block
+        return None
 
     def checkChainValidity(self):
         """
@@ -84,6 +98,9 @@ class MyChain:
                 return False
 
         return True
+
+    def generatenextBlockWithTransaction(self, address, amount):
+        pass
 
     def signTxIn(self, transaction, txInIndex, privateKey, unspentTxOuts):
         """
@@ -149,6 +166,38 @@ class MyChain:
                 return txOuts, leftOver
         
         return None
+
+    def _toUnsignedTxIn(self, UnspentTxOut):
+        """
+        convert a UnspentTxOut to a TxIn
+
+        Args:
+            UnspentTxOut (TxOut): the UnspentTxOut to convert
+
+        Returns:
+            TxIn: the TxIn
+        """
+        return TxIn(UnspentTxOut.getId(), UnspentTxOut.getIndex())
+
+    def _createTxOuts(self, receiverAddress, senderAddress, amount, leftOver):
+        """
+        create TxOuts for a transaction
+
+        Args:
+            receiverAddress (string): address of the receiver
+            senderAddress (string): address of the sender
+            amount (int): amount of the coin
+            leftOver (int): left over amount
+
+        Returns:
+            list: list of TxOuts
+        """
+        txOuts = []
+        if amount > 0:
+            txOuts.append(TxOut(receiverAddress, amount))
+        if leftOver > 0:
+            txOuts.append(TxOut(senderAddress, leftOver))
+        return txOuts
 
     def toJson(self):
         """

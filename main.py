@@ -1,5 +1,6 @@
-from MyBlock import MyBlock
-from MyChain import MyChain
+from MyCoin.MyBlock import MyBlock
+from MyCoin.MyChain import MyChain
+import www
 import datetime
 
 
@@ -8,8 +9,10 @@ def main():
     
     for i in range(0, 10):
         chain.addNewBlock("Block #" + str(i))
-
     print(chain.toJson())
+    
+    www.setChain(chain)
+    www.app.run()
 
 
 if __name__ == "__main__":
