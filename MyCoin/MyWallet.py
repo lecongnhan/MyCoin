@@ -24,6 +24,17 @@ class MyWallet:
         return "0x" + publicKey
 
     @staticmethod
+    def createNewWallet():
+        """
+        create a new wallet
+
+        Returns:
+            MyWallet: the new wallet
+        """
+        privateKey = MyWallet.generateNewPrivateKey()
+        return MyWallet(privateKey)
+
+    @staticmethod
     def sign(data, privateKey):
         """
         sign the data with the private key
@@ -50,3 +61,19 @@ class MyWallet:
 
     def getPublicKey(self):
         return self._publicKey
+
+    def getBalance(self, unspentTxOuts):
+        """
+        get the balance of the wallet
+
+        Args:
+            unspentTxOuts (list(TxOut)): list of unspent TxOuts
+                
+        Returns:
+            int: balance of the wallet
+        """
+        balance = 0
+        for txOut in unspentTxOuts:
+            if txOut.getAddress() == self._publicKey:
+                balance += txOut.getAmount()
+        return balance
